@@ -11,16 +11,28 @@ function Login() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(studentCode, password);
-    navigate("/profile");
+
+    // 🔒 تحقق من البيانات
+    if (!studentCode || !password) {
+      alert("من فضلك ادخل البيانات");
+      return;
+    }
+
+    // 👑 Admin Login
+    if (studentCode === "admin" && password === "admin") {
+      navigate("/file");
+    } else {
+      // 👤 User عادي
+      navigate("/profile");
+    }
   }
 
   return (
     <div className="min-h-screen bg-gray-100">
-      
+
       {/* Header */}
       <div className="w-full flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 bg-white shadow-sm relative">
-        
+
         <img
           src={logo}
           alt="left logo"
@@ -38,7 +50,7 @@ function Login() {
         />
       </div>
 
-      {/* Form Container */}
+      {/* Form */}
       <div className="flex items-center justify-center mt-10 sm:mt-16 px-3">
         <form
           onSubmit={handleSubmit}
@@ -48,6 +60,7 @@ function Login() {
             تسجيل الدخول
           </h2>
 
+          {/* Student Code */}
           <div className="mb-4 text-right">
             <label className="block mb-2 text-gray-600 text-sm sm:text-base">
               كود الطالب
@@ -61,6 +74,7 @@ function Login() {
             />
           </div>
 
+          {/* Password */}
           <div className="mb-6 text-right">
             <label className="block mb-2 text-gray-600 text-sm sm:text-base">
               كلمة السر
@@ -74,10 +88,12 @@ function Login() {
             />
           </div>
 
+          {/* Submit */}
           <button className="w-full bg-blue-600 text-white py-2 sm:py-3 rounded-lg hover:bg-blue-700 transition text-sm sm:text-base">
             تسجيل
           </button>
 
+          {/* Forgot */}
           <div className="text-center mt-4 text-xs sm:text-sm text-gray-500">
             <p className="mb-1 cursor-pointer hover:underline">
               هل نسيت كلمة المرور؟

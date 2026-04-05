@@ -51,7 +51,7 @@ function Dashboard() {
 
         <div className="flex items-center gap-3 text-blue-600 font-medium">
           <i className="fa-solid fa-book"></i>
-          <span>المواد المسجلة</span>
+          <span>معلومات الطالب</span>
         </div>
 
         <div
