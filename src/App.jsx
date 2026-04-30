@@ -11,6 +11,7 @@ import NavigationDrawer from './NavigationDrawer/NavigationDrawer';
 import StudentDBPage from './studentdbPage/StudentDBPage';
 import Admindb from './admindb/Admindb';
 import AdminExceptionsDash from './AdminExceptions/AdminExceptionsDash';
+import Request from './Request/Request';
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
         <Route path="/chat" element={<ChatBot />} />
         <Route path="/student-db" element={<StudentDBPage />} />
         <Route path="/admin-db" element={<Admindb />} />
+        <Route path="/request" element={<Request/>} />
         <Route path="/exceptions" element={<AdminExceptionsDash />} />
         <Route
           path="/file"

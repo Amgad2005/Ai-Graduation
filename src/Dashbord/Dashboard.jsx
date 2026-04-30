@@ -67,7 +67,14 @@ function Dashboard() {
           className="flex items-center gap-3 hover:text-blue-500 cursor-pointer p-2 rounded-lg transition"
         >
           <i className="fa-solid fa-robot"></i>
-          <span>المساعد الذكي</span>
+          <span>   المواد المقترحه </span>
+        </div>
+        <div
+          onClick={() => navigate("/request")}
+          className="flex items-center gap-3 hover:text-blue-500 cursor-pointer p-2 rounded-lg transition"
+        >
+          <i className="fa-solid fa-book-open"></i>
+          <span>طلبات دواعي تحرج</span>
         </div>
 
         <div className="flex items-center gap-3 hover:text-blue-500 cursor-pointer">
@@ -178,7 +185,7 @@ function Dashboard() {
         onClick={() => navigate("/chat")}
         className="cursor-pointer ms-1 hover:opacity-80"
       >
-        تحدث مع المساعد الذكي
+        المواد المقترحه من  المرشد الذكي
       </span>
     </p>
   </div>

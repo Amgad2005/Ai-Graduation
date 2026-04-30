@@ -1,164 +1,212 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function ChatBot() {
+const tabs = [
+  { key: "upcoming", label: "الفصل القادم" },
+  { key: "remaining", label: "المتبقية" },
+  { key: "completed", label: "المكتملة" },
+];
+
+const data = {
+  upcoming: [
+    { id: 1, name: "تعلم الآلة", code: "CS405", hours: 3, checked: false },
+    { id: 2, name: "الأمن السيبراني", code: "CS408", hours: 3, checked: false },
+    {
+      id: 3,
+      name: "الحوسبة السحابية",
+      code: "CS412",
+      hours: 3,
+      checked: false,
+    },
+    {
+      id: 4,
+      name: "معالجة اللغات الطبيعية",
+      code: "CS450",
+      hours: 3,
+      checked: false,
+    },
+    { id: 5, name: "نظم التشغيل", code: "CS302", hours: 3, checked: false },
+  ],
+  remaining: [
+    { id: 6, name: "هندسة البرمجيات 2", code: "CS301", hours: 3 },
+    { id: 7, name: "نظم التشغيل", code: "CS302", hours: 3 },
+  ],
+  completed: [
+    {
+      id: 8,
+      name: "مقدمة في علوم الحاسب",
+      code: "CS101",
+      hours: 3,
+      grade: "A",
+    },
+    { id: 9, name: "هياكل البيانات", code: "CS201", hours: 3, grade: "B+" },
+  ],
+};
+
+export default function StudyPlan() {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState([
-    { type: "bot", text: "مرحبًا بك في مساعد بوابة خدمات الطلاب، كيف يمكنني مساعدتك اليوم؟" }
-  ]);
-  const [input, setInput] = useState("");
 
-  const chatEndRef = useRef(null);
+  const [activeTab, setActiveTab] = useState("upcoming");
+  const [courses, setCourses] = useState(data);
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  const toggle = (id) => {
+    setCourses((prev) => ({
+      ...prev,
+      upcoming: prev.upcoming.map((c) =>
+        c.id === id ? { ...c, checked: !c.checked } : c,
+      ),
+    }));
+  };
 
-  const sendMessage = () => {
-    if (!input.trim()) return;
-
-    const newMessages = [
-      ...messages,
-      { type: "user", text: input },
-      { type: "bot", text: "جارٍ الرد..." }
-    ];
-
-    setMessages(newMessages);
-    setInput("");
+  const handleSave = () => {
+    console.log("Saved Data:", courses);
+    alert("تم حفظ الخطة ✅");
   };
 
   return (
-   <div className="min-h-screen bg-gray-100 flex flex-col">
-  {/* Header */}
-  <div className="bg-white border-b p-3 sm:p-4 flex items-center justify-between flex-wrap gap-2">
-    
-    {/* Back Button */}
-    <button 
-      onClick={() => navigate("/profile")}
-      className="bg-gray-200 text-gray-700 px-3 sm:px-4 py-2 rounded hover:bg-blue-500 hover:text-white mb-2 sm:mb-4 me-auto"
-    >
-      الرجوع
-    </button>
+    <div dir="rtl" className="min-h-screen bg-gray-100 p-3 sm:p-6">
 
-    {/* Title Center */}
-    <div className="text-center flex-1 mb-2 sm:mb-3 w-full sm:w-auto">
-      <h1 className="text-base sm:text-lg md:text-xl font-bold">
-        بوابة خدمات الطالب
-      </h1>
-      <p className="text-xs sm:text-sm text-gray-500">
-        جامعة بنها - كلية الحاسبات والذكاء الاصطناعي
+  {/* Header */}
+  <div className="mb-6 flex items-center justify-between flex-wrap gap-2">
+    
+    <div className="text-right w-full sm:w-auto">
+      <h1 className="text-lg sm:text-2xl font-bold">خطة الدراسة</h1>
+      <p className="text-xs sm:text-sm text-gray-400">
+        توصيات مخصصة بناءً على أدائك واهتماماتك.
       </p>
     </div>
+
+    <button
+      onClick={() => navigate(-1)}
+      className="flex items-center gap-2 text-xs sm:text-sm bg-white px-2 sm:px-3 py-2 rounded-lg shadow hover:bg-gray-50 transition"
+    >
+      <i className="fa-solid fa-arrow-left"></i>
+      الرجوع
+    </button>
   </div>
 
-  {/* Main Container */}
-  <div className="flex-1 flex justify-center px-2 sm:px-4 pb-24 mt-2 sm:mt-3">
-    <div className="w-full max-w-5xl bg-white rounded-2xl shadow flex flex-col overflow-hidden">
-      
-      {/* Assistant Header */}
-      <div className="flex items-center ms-auto bg-gray-50 p-3 sm:p-4 border-b flex-wrap gap-2">
-        <div className="text-end me-2 sm:me-3">
-          <h2 className="font-semibold text-sm sm:text-base">
-            مساعد بوابة الطالب الذكي
-          </h2>
-          <p className="text-xs sm:text-sm text-gray-500">
-            اسأل عن أي شيء يتعلق بالخدمات الطلابية
-          </p>
-        </div>
-        <div className="bg-blue-100 p-2 rounded-full">
-          <i className="fa-solid fa-comments text-blue-500 text-sm sm:text-base"></i>
-        </div>
-      </div>
+  {/* Tabs */}
+  <div className="flex flex-row-reverse border-b mb-6 overflow-x-auto">
+    {tabs.map((tab) => (
+      <button
+        key={tab.key}
+        onClick={() => setActiveTab(tab.key)}
+        className={`px-3 sm:px-4 py-2 text-xs sm:text-sm border-b-2 transition whitespace-nowrap ${
+          activeTab === tab.key
+            ? "border-indigo-600 text-indigo-600"
+            : "border-transparent text-gray-400 hover:text-black"
+        }`}
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
 
-      {/* Quick Actions */}
-      <div className="flex justify-around p-3 sm:p-4 bg-gray-50 border-b flex-wrap gap-3">
-        
-        <div className="flex flex-col items-center gap-2 w-[45%] sm:w-auto">
-          <div className="bg-purple-500 text-white p-2 sm:p-3 rounded-xl">
-            <i className="fa-solid fa-circle-question text-sm sm:text-base"></i>
-          </div>
-          <span className="text-[10px] sm:text-xs">استفسار أكاديمي</span>
-        </div>
+  {/* Cards */}
+  <div className="space-y-3 sm:space-y-4">
 
-        <div className="flex flex-col items-center gap-2 w-[45%] sm:w-auto">
-          <div className="bg-orange-500 text-white p-2 sm:p-3 rounded-xl">
-            <i className="fa-solid fa-file-lines text-sm sm:text-base"></i>
-          </div>
-          <span className="text-[10px] sm:text-xs">التسجيل الخاص</span>
-        </div>
-
-        <div className="flex flex-col items-center gap-2 w-[45%] sm:w-auto">
-          <div className="bg-green-500 text-white p-2 sm:p-3 rounded-xl">
-            <i className="fa-solid fa-calendar text-sm sm:text-base"></i>
-          </div>
-          <span className="text-[10px] sm:text-xs">الجدول الدراسي</span>
-        </div>
-
-        <div className="flex flex-col items-center gap-2 w-[45%] sm:w-auto">
-          <div className="bg-blue-500 text-white p-2 sm:p-3 rounded-xl">
-            <i className="fa-solid fa-comment-dots text-sm sm:text-base"></i>
-          </div>
-          <span className="text-[10px] sm:text-xs">تسجيل شكوى</span>
-        </div>
-
-      </div>
-
-      {/* Chat Messages */}
-      <div className="flex-1 p-3 sm:p-4 space-y-3 overflow-y-auto bg-gray-50">
-        {messages.map((msg, index) => (
+    {/* الفصل القادم */}
+    {activeTab === "upcoming" &&
+      courses.upcoming.map((course) => (
+        <div
+          key={course.id}
+          onClick={() => toggle(course.id)}
+          className="bg-white rounded-xl p-3 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between border cursor-pointer transition hover:shadow-md hover:scale-[1.01] gap-3"
+        >
           <div
-            key={index}
-            className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}
+            className={`w-5 h-5 border-2 rounded flex items-center justify-center ${
+              course.checked
+                ? "bg-indigo-600 border-indigo-600"
+                : "border-gray-300"
+            }`}
           >
-            <div
-              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm max-w-[80%] sm:max-w-xs ${
-                msg.type === "user"
-                  ? "bg-blue-500 text-white"
-                  : "bg-white border"
-              }`}
-            >
-              {msg.text}
+            {course.checked && (
+              <div className="w-2 h-2 bg-white rounded-sm"></div>
+            )}
+          </div>
+
+          <div className="flex items-center gap-3 sm:gap-4 w-full justify-between">
+            
+            <div className="text-right">
+              <p className="font-semibold text-sm sm:text-base">
+                {course.name}
+              </p>
+              <p className="text-[10px] sm:text-xs text-gray-400">
+                {course.code} ساعات معتمدة {course.hours}
+              </p>
+            </div>
+
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-sm">
+              📘
             </div>
           </div>
-        ))}
+        </div>
+      ))}
 
-        <div ref={chatEndRef} />
-      </div>
-    </div>
+    {/* المتبقية */}
+    {activeTab === "remaining" &&
+      courses.remaining.map((course) => (
+        <div
+          key={course.id}
+          className="bg-white rounded-xl p-3 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between border transition hover:shadow-md gap-3"
+        >
+          <div></div>
+
+          <div className="flex items-center gap-3 sm:gap-4 w-full justify-between">
+            
+            <div className="text-right">
+              <p className="font-semibold text-sm sm:text-base">
+                {course.name}
+              </p>
+              <p className="text-[10px] sm:text-xs text-gray-400">
+                {course.code} - {course.hours} ساعات معتمدة
+              </p>
+            </div>
+
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-50 rounded-lg flex items-center justify-center text-sm">
+              📙
+            </div>
+          </div>
+        </div>
+      ))}
+
+    {/* المكتملة */}
+    {activeTab === "completed" &&
+      courses.completed.map((course) => (
+        <div
+          key={course.id}
+          className="bg-white rounded-xl p-3 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between border transition hover:shadow-md gap-3"
+        >
+          <div className="bg-green-100 text-green-700 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-bold">
+            {course.grade}
+          </div>
+
+          <div className="flex items-center gap-3 sm:gap-4 w-full justify-between">
+            
+            <div className="text-right">
+              <p className="font-semibold text-sm sm:text-base">
+                {course.name}
+              </p>
+              <p className="text-[10px] sm:text-xs text-gray-400">
+                {course.code} - {course.hours} ساعات معتمدة
+              </p>
+            </div>
+
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-lg flex items-center justify-center text-sm">
+              ✅
+            </div>
+          </div>
+        </div>
+      ))}
   </div>
 
-  {/* Fixed Input */}
-  <div className="fixed bottom-0 left-0 w-full bg-white border-t p-2 sm:p-3 flex justify-center">
-    <div className="w-full max-w-5xl flex items-center gap-2">
-      
-      {/* Upload Button */}
-      <label className="cursor-pointer bg-gray-100 p-2 rounded-xl">
-        <i className="fa-solid fa-paperclip text-sm sm:text-base"></i>
-        <input
-          type="file"
-          className="hidden"
-          onChange={(e) => console.log(e.target.files)}
-        />
-      </label>
-
-      {/* Input */}
-      <input
-        type="text"
-        placeholder="اكتب رسالتك هنا..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        className="flex-1 border rounded-xl px-3 sm:px-4 py-2 text-xs sm:text-sm focus:outline-none"
-      />
-
-      {/* Send */}
-      <button
-        onClick={sendMessage}
-        className="bg-blue-500 text-white p-2 rounded-xl"
-      >
-        <i className="fa-solid fa-paper-plane text-sm sm:text-base"></i>
-      </button>
-    </div>
-  </div>
+  {/* Save Button */}
+  <button
+    onClick={handleSave}
+    className="mt-6 w-full sm:w-auto bg-indigo-600 text-white px-4 sm:px-5 py-2 text-sm sm:text-base rounded-lg hover:bg-indigo-700 transition"
+  >
+    حفظ الخطة
+  </button>
 </div>
   );
 }
