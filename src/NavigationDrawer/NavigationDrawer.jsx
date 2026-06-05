@@ -5,9 +5,6 @@ import {
   BookOpen,
   Shield,
   GraduationCap,
-  ClipboardList,
-  PenLine,
-  Bot,
   LogOut,
   File,
 } from "lucide-react";
@@ -46,24 +43,16 @@ export default function NavigationDrawer({ isOpen, onClose }) {
           </button>
         </div>
 
-        {/* Title */}
+        {/* Title (NEW) */}
         <div className="flex flex-col items-center px-5 pb-4">
           <GraduationCap className="w-8 h-8 text-blue-500 mb-1" />
-          <h2 className="text-base font-bold text-gray-800">
-            بوابة خدمات الطالب
+          <h2 className="text-base font-bold text-gray-800 text-center">
+            كلية الحاسبات والذكاء الاصطناعي
           </h2>
-        </div>
-
-        {/* Student Card */}
-        <div className="mx-5 mb-4 bg-blue-500 rounded-xl px-4 py-3 text-white text-center">
-          <p className="font-bold text-sm">أحمد مصطفى كمال حسن</p>
-          <p className="text-xs mt-1 opacity-90">الكود: 26128228</p>
-          <p className="text-xs opacity-90">المعدل: 3.00</p>
         </div>
 
         {/* Navigation */}
         <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
-          {/* Student DB */}
           <DrawerItem
             icon={<Database className="w-5 h-5" />}
             label="Student DB"
@@ -76,7 +65,6 @@ export default function NavigationDrawer({ isOpen, onClose }) {
 
           <div className="my-3 border-t border-gray-100" />
 
-          {/* Academic Advising */}
           <DrawerItem
             icon={<BookOpen className="w-5 h-5" />}
             label="الارشاد الاكاديمي"
@@ -87,7 +75,6 @@ export default function NavigationDrawer({ isOpen, onClose }) {
             }}
           />
 
-          {/* Admin DB */}
           <DrawerItem
             icon={<Shield className="w-5 h-5" />}
             label="Admin DB"
@@ -97,7 +84,7 @@ export default function NavigationDrawer({ isOpen, onClose }) {
               onClose();
             }}
           />
-          {/* AdminExceptionsDash*/}
+
           <DrawerItem
             icon={<File className="w-5 h-5" />}
             label="Exceptions"
@@ -113,10 +100,10 @@ export default function NavigationDrawer({ isOpen, onClose }) {
         <div className="px-4 pb-6 pt-2">
           <button
             onClick={() => {
-              navigate("/"); // 👈 يوديك لصفحة اللوجين مثلا
-              onClose(); // 👈 يقفل الـ drawer
+              navigate("/");
+              onClose();
             }}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-all duration-200 hover:scale-[1.02]"
           >
             <LogOut className="w-5 h-5" />
             <span>تسجيل الخروج</span>
@@ -127,17 +114,30 @@ export default function NavigationDrawer({ isOpen, onClose }) {
   );
 }
 
+/* =========================
+   Drawer Item
+   ========================= */
 function DrawerItem({ icon, label, active = false, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all duration-200 ${
-        active
-          ? "bg-blue-500 text-white font-semibold shadow-md"
-          : "text-gray-700 hover:bg-gray-50 font-medium"
-      }`}
+      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all duration-200
+        ${
+          active
+            ? "bg-blue-500 text-white font-semibold shadow-md"
+            : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+        }
+        hover:scale-[1.02]
+      `}
     >
-      <span className={active ? "text-white" : "text-gray-500"}>{icon}</span>
+      <span
+        className={`transition-colors duration-200 ${
+          active ? "text-white" : "text-gray-500"
+        }`}
+      >
+        {icon}
+      </span>
+
       <span>{label}</span>
     </button>
   );

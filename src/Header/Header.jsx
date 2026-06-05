@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Bell, Menu } from 'lucide-react';
+import { Search, Menu } from 'lucide-react';
 
 export default function Header({ onMenuToggle }) {
   return (
@@ -14,16 +14,12 @@ export default function Header({ onMenuToggle }) {
             >
               <Menu className="w-5 h-5 text-gray-600" />
             </button>
-            <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <Bell className="w-5 h-5 text-gray-600" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
+
           </div>
 
           {/* Center - Title */}
           <div className="text-center shrink-0">
-            <h1 className="text-xl font-bold text-gray-800">بوابة خدمات الطالب</h1>
-            <p className="text-sm text-gray-500">جامعة بنها - كلية الحاسبات والذكاء الاصطناعي</p>
+            <h1 className="text-xl font-bold text-gray-800">جامعة بنها - كلية الحاسبات والذكاء الاصطناعي</h1>
           </div>
 
           {/* Left - Search */}

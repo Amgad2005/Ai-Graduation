@@ -32,7 +32,7 @@ function Login() {
 
       {/* Header */}
       <div className="w-full flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 bg-white shadow-sm relative">
-
+        
         <img
           src={logo}
           alt="left logo"
@@ -106,3 +106,4 @@ function Login() {
 }
 
 export default Login;
+

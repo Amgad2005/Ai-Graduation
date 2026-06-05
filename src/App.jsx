@@ -12,6 +12,7 @@ import StudentDBPage from './studentdbPage/StudentDBPage';
 import Admindb from './admindb/Admindb';
 import AdminExceptionsDash from './AdminExceptions/AdminExceptionsDash';
 import Request from './Request/Request';
+import Help from './Help/Help';
 
 function App() {
 
@@ -30,6 +31,11 @@ function App() {
 
 
   const showHeaderPaths = ["/student-db", "/file", "/admin-db" ,"/exceptions"];
+
+
+
+
+  
 
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
@@ -54,6 +60,7 @@ function App() {
         <Route path="/student-db" element={<StudentDBPage />} />
         <Route path="/admin-db" element={<Admindb />} />
         <Route path="/request" element={<Request/>} />
+        <Route path="/help" element={<Help/>} />
         <Route path="/exceptions" element={<AdminExceptionsDash />} />
         <Route
           path="/file"
