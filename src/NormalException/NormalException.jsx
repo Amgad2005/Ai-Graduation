@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Api from "../Api/Api";
 
-export default function GraduationRequests() {
+export default function NormalException() {
   const navigate = useNavigate();
 
   const [availableCourses, setAvailableCourses] = useState([]);
@@ -22,14 +22,14 @@ export default function GraduationRequests() {
   };
 
   const statusMap = {
-    pending: { label: "⏳ قيد المراجعة", className: "bg-yellow-100 text-yellow-700" },
+    pending:  { label: "⏳ قيد المراجعة", className: "bg-yellow-100 text-yellow-700" },
     approved: { label: "✅ تمت الموافقة", className: "bg-green-100 text-green-700" },
-    rejected: { label: "❌ مرفوض", className: "bg-red-100 text-red-700" },
+    rejected: { label: "❌ مرفوض",        className: "bg-red-100 text-red-700" },
   };
 
   const fetchRequests = async () => {
     const requestsRes = await Api.get("/student/material-requests", {
-      params: { type: "graduation" },
+      params: { type: "regular" },
     });
     const list = requestsRes.data?.data?.requests || [];
     setRequests(list);
@@ -65,7 +65,7 @@ export default function GraduationRequests() {
 
     setLoading(true);
     try {
-      await Api.post("/student/material-requests/graduation", {
+      await Api.post("/student/material-requests/regular", {
         courses: [Number(selectedCourseId)],
         student_notes: reason,
       });
@@ -105,7 +105,7 @@ export default function GraduationRequests() {
           الرجوع
         </button>
         <h1 className="text-base sm:text-xl font-bold text-center flex-1 w-full sm:w-auto">
-          طلبات دواعي التخرج
+          طلبات التسجيل الاستثنائية
         </h1>
         <div className="hidden sm:block w-10"></div>
       </div>

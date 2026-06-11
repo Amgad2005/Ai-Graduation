@@ -1,24 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import Api from "../Api/Api";
 function Dashboard() {
   const [openSidebar, setOpenSidebar] = useState(false);
 
-  const student = {
-    name: "أحمد مصطفى كمال حسن",
-    code: "26128228",
-    gpa: 3.0,
-    section: "SC",
-    grade: "الفرقة الرابعة",
-  };
+ const student = JSON.parse(localStorage.getItem("user")) || {};
 
-  const stats = {
-    completed: 24,
-    remaining: 18,
-  };
-
+const [stats, setStats] = useState({
+  completed: 0,
+  remaining: 0,
+});
   const navigate = useNavigate();
+useEffect(() => {
+  async function getCourses() {
+    try {
+      const response = await Api.get("/student/courses");
 
+      console.log("COURSES RESPONSE:", response.data);
+
+      setStats({
+        completed: response?.data?.data?.completed?.length || 0,
+        remaining: response?.data?.data?.remaining?.length || 0,
+      });
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  getCourses();
+}, []);
   return (
     <div
       dir="rtl"
@@ -76,8 +87,29 @@ function Dashboard() {
               hover:translate-x-1 hover:shadow-md"
             >
               <i className="fa-solid fa-book-open w-5 text-center"></i>
-              <span>طلبات التخرج</span>
+              <span>طلبات دواعي التخرج</span>
             </div>
+            <div
+              onClick={() => navigate("/normal")}
+              className="flex items-center gap-3 p-3 rounded-xl cursor-pointer
+              hover:bg-blue-50 hover:text-blue-600 transition-all duration-300
+              hover:translate-x-1 hover:shadow-md"
+            >
+              <i className="fa-solid fa-book-open w-5 text-center"></i>
+              <span>طلبات التسجيل المواد</span>
+            </div>
+
+            <div
+              onClick={() => navigate("/student-db")}
+              className="flex items-center gap-3 p-3 rounded-xl cursor-pointer
+              hover:bg-blue-50 hover:text-blue-600 transition-all duration-300
+              hover:translate-x-1 hover:shadow-md"
+            >
+              <i className="fa-solid fa-chart-line w-5 text-center"></i>
+              <span>الاداء الدراسي</span>
+            </div>
+            
+           
 
             <div
               onClick={() => navigate("/help")}
@@ -178,7 +210,7 @@ function Dashboard() {
                 </p>
 
                 <h3 className="font-extrabold text-lg text-gray-800">
-                  {student.section}
+                  غير متوفر
                 </h3>
               </div>
             </div>
@@ -201,7 +233,7 @@ function Dashboard() {
                 </p>
 
                 <h3 className="font-extrabold text-lg text-gray-800">
-                  {student.grade}
+                  {student.level}
                 </h3>
               </div>
             </div>
@@ -224,7 +256,7 @@ function Dashboard() {
                 </p>
 
                 <h3 className="font-extrabold text-lg text-gray-800">
-                  {student.gpa.toFixed(2)}
+                  {Number(student.gpa || 0).toFixed(2)}
                 </h3>
               </div>
             </div>

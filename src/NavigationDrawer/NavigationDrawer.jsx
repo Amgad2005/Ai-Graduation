@@ -53,15 +53,6 @@ export default function NavigationDrawer({ isOpen, onClose }) {
 
         {/* Navigation */}
         <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
-          <DrawerItem
-            icon={<Database className="w-5 h-5" />}
-            label="Student DB"
-            active={location.pathname === "/student-db"}
-            onClick={() => {
-              navigate("/student-db");
-              onClose();
-            }}
-          />
 
           <div className="my-3 border-t border-gray-100" />
 

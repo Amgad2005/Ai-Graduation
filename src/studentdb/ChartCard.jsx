@@ -1,49 +1,81 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
-
-const data = [
-  { name: '11/2023', AI: 65, Mathematics: 60, Programming: 62 },
-  { name: '12/2023', AI: 68, Mathematics: 64, Programming: 64 },
-  { name: '1/2024', AI: 62, Mathematics: 62, Programming: 60 },
-  { name: '2/2024', AI: 70, Mathematics: 66, Programming: 66 },
-  { name: '3/2024', AI: 72, Mathematics: 68, Programming: 68 },
-  { name: '4/2024', AI: 68, Mathematics: 64, Programming: 66 },
-  { name: '5/2024', AI: 75, Mathematics: 70, Programming: 70 },
-  { name: '6/2024', AI: 78, Mathematics: 72, Programming: 72 },
-  { name: '7/2024', AI: 80, Mathematics: 75, Programming: 75 },
-  { name: '8/2024', AI: 82, Mathematics: 78, Programming: 78 },
-  { name: '9/2024', AI: 85, Mathematics: 80, Programming: 80 },
-  { name: '10/2024', AI: 88, Mathematics: 84, Programming: 84 },
-];
+import { useEffect, useState } from "react";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import Api from "../Api/Api";
 
 export default function ChartCard() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const res = await Api.get("/student/courses");
+        const summary = res.data?.data?.summary;
+
+        setData([
+          { name: "مكتملة", value: summary?.completed_count || 0, color: "#10b981" },
+          { name: "جاري", value: summary?.in_progress_count || 0, color: "#3b82f6" },
+          { name: "متبقية", value: summary?.remaining_count || 0, color: "#e5e7eb" },
+        ]);
+      } catch (err) {
+        console.error("CHART ERROR:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex justify-center items-center h-64">
+        <div className="w-7 h-7 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  const total = data.reduce((s, d) => s + d.value, 0);
+
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex gap-6 text-sm flex-row-reverse w-full">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-pink-400"></div>
-            <span className="text-gray-600">AI</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-blue-400"></div>
-            <span className="text-gray-600">Mathematics</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-gray-400"></div>
-            <span className="text-gray-600">Programming</span>
-          </div>
-        </div>
-      </div>
-      <ResponsiveContainer width="100%" height={180}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#9ca3af' }} />
-          <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} domain={[10, 100]} tickFormatter={(value) => `${value}%`} />
-          <Line key="ai-line" type="monotone" dataKey="AI" stroke="#f9a8d4" strokeWidth={2} dot={false} />
-          <Line key="math-line" type="monotone" dataKey="Mathematics" stroke="#93c5fd" strokeWidth={2} dot={false} />
-          <Line key="prog-line" type="monotone" dataKey="Programming" stroke="#d1d5db" strokeWidth={2} dot={false} />
-        </LineChart>
+      <h3 className="font-semibold text-gray-800 mb-4 text-right">توزيع المواد</h3>
+
+      <ResponsiveContainer width="100%" height={220}>
+        <PieChart>
+          <Pie
+            data={data.filter(d => d.value > 0)}
+            cx="50%"
+            cy="50%"
+            innerRadius={60}
+            outerRadius={90}
+            paddingAngle={3}
+            dataKey="value"
+          >
+            {data.filter(d => d.value > 0).map((entry, index) => (
+              <Cell key={index} fill={entry.color} />
+            ))}
+          </Pie>
+          <Tooltip
+            formatter={(value, name) => [`${value} مادة`, name]}
+            contentStyle={{ fontSize: 12, borderRadius: 8 }}
+          />
+        </PieChart>
       </ResponsiveContainer>
+
+      {/* Legend مع الأرقام */}
+      <div className="flex justify-center gap-4 mt-2">
+        {data.map((entry) => (
+          <div key={entry.name} className="flex flex-col items-center gap-1">
+            <div className="flex items-center gap-1">
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: entry.color }}></div>
+              <span className="text-xs text-gray-500">{entry.name}</span>
+            </div>
+            <span className="text-sm font-semibold text-gray-700">{entry.value}</span>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-center text-xs text-gray-400 mt-3">إجمالي المواد: {total}</p>
     </div>
   );
 }

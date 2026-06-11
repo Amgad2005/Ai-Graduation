@@ -13,6 +13,7 @@ import Admindb from './admindb/Admindb';
 import AdminExceptionsDash from './AdminExceptions/AdminExceptionsDash';
 import Request from './Request/Request';
 import Help from './Help/Help';
+import NormalException from './NormalException/NormalException';
 
 function App() {
 
@@ -30,7 +31,7 @@ function App() {
   };
 
 
-  const showHeaderPaths = ["/student-db", "/file", "/admin-db" ,"/exceptions"];
+  const showHeaderPaths = [ "/file", "/admin-db" ,"/exceptions"];
 
 
 
@@ -62,6 +63,7 @@ function App() {
         <Route path="/request" element={<Request/>} />
         <Route path="/help" element={<Help/>} />
         <Route path="/exceptions" element={<AdminExceptionsDash />} />
+        <Route path="/normal" element={<NormalException />} />
         <Route
           path="/file"
           element={
